@@ -6,8 +6,7 @@ gravity=0.5;
 onGround=holdLeft=holdRight=false;
 platforms=[];
 bullets=[];
-facingRight=true;
-
+playerDirection = "right";
 playerImage = new Image();
 playerImage.src = "player.png"
 spriteWidth = 70;
@@ -63,7 +62,7 @@ function update() {
 	  location = location
   }
 	    
-  if(playery > 800) {
+  if(playery > window.innerHeight) {
 		xvelocity=yvelocity=0;
 		playerx=playery=200;
   }
@@ -138,10 +137,10 @@ function update() {
   
   for (var i = 0; i < bullets.length; i++) {
     if (bullets[i][0] > -11) {
-	  if (facingRight) { 
+	  if (bulletDirection == 'right') { 
 		  bullets[i][0] += 20; 
 		  }
-      if (facingLeft) { 
+      if (bulletDirection == 'left') { 
 		  bullets[i][0] -= 20;
 		  }
     } 
@@ -151,16 +150,15 @@ function update() {
     }
   }
 }
-  
+let bulletDirection = playerDirection;
 function keyDown(evt) {
   switch(evt.keyCode) {
 	case 32: //space bar
-	  if (bullets.length <= 2) bullets.push([playerx, playery - 50, 4, 20]);
+	  if (bullets.length <= 2) bullets.push([playerx, playery - 50, 4, 20, bulletDirection]);
 	  break;
     case 37: //left arrow key
       holdLeft=true;
-      facingLeft=true;
-      facingRight=false;
+      playerDirection = 'left';
         break;
     case 38: //up arrow key
         if(onGround) {
@@ -171,8 +169,7 @@ function keyDown(evt) {
         break;   
     case 39: //right arrow key
       holdRight=true;
-      facingRight=true;
-      facingLeft=false;
+      playerDirection = 'right';
         break;
   }
 }
