@@ -1,18 +1,18 @@
 <canvas id="gc"></canvas>
 <script>
-playerx=playery=200;
-xvelocity=yvelocity=0;
-gravity=0.5;
-onGround=holdLeft=holdRight=false;
-platforms=[];
-bullets=[];
-let playerDirection = 'right';
-playerImage = new Image();
+let playerx=playery=200;
+let xvelocity=yvelocity=0;
+const gravity=0.5;
+let onGround=holdLeft=holdRight=false;
+let platforms=[];
+let bullets=[];
+let pD = "left";
+let playerImage = new Image();
 playerImage.src = "player.png"
-spriteWidth = 70;
-spriteHeight = 70;
-framex = 0;
-framey = 0;
+const spriteWidth = 70;
+const spriteHeight = 70;
+let framex = 0;
+let framey = 0;
 spriteframe = 0;
 
 window.onload=function() {
@@ -150,15 +150,17 @@ function update() {
     }
   }
 }
+  
 function keyDown(evt) {
-  let bulletDirection = playerDirection;
+let bD = pD;
   switch(evt.keyCode) {
 	case 32: //space bar
-	  if (bullets.length <= 2) bullets.push([playerx, playery - 50, 4, 20, bulletDirection]);
+	  if (bullets.length <= 2) bullets.push([playerx, playery - 50, 4, 20, bD]);
+	  console.log(bullets);
 	  break;
     case 37: //left arrow key
       holdLeft=true;
-      playerDirection = 'left';
+      pD = 'left';
         break;
     case 38: //up arrow key
         if(onGround) {
@@ -169,7 +171,7 @@ function keyDown(evt) {
         break;   
     case 39: //right arrow key
       holdRight=true;
-      playerDirection = 'right';
+      pD = 'right';
         break;
   }
 }
