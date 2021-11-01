@@ -137,10 +137,10 @@ function update() {
   
   for (var i = 0; i < bullets.length; i++) {
     if (bullets[i][0] > -11) {
-	  if (bulletDirection == 'right') { 
+	  if (bullets[i][4] == 'right') { 
 		  bullets[i][0] += 20; 
 		  }
-      if (bulletDirection == 'left') { 
+      if (bullets[i][4] == 'left') { 
 		  bullets[i][0] -= 20;
 		  }
     } 
