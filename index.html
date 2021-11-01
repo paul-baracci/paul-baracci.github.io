@@ -76,8 +76,8 @@ function update() {
   onGround=false;
   for(i=0;i<40;i++) {
     if(
-	   playerx>platforms[i].x && 
-	   playerx<platforms[i].x + platforms[i].w &&
+	   playerx>platforms[i].x - 15 && 
+	   playerx<platforms[i].x + platforms[i].w + 15 &&
        playery>platforms[i].y &&
        playery<platforms[i].y + platforms[i].h 
     ) {
