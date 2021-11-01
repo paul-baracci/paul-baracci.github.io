@@ -150,8 +150,8 @@ function update() {
     }
   }
 }
-let bulletDirection = playerDirection;
 function keyDown(evt) {
+  let bulletDirection = playerDirection;
   switch(evt.keyCode) {
 	case 32: //space bar
 	  if (bullets.length <= 2) bullets.push([playerx, playery - 50, 4, 20, bulletDirection]);
