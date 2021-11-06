@@ -31,6 +31,7 @@ function bulletInit() {
             bullets.length &&
             bullets[i][0] >= enemies[0].x) {
                 enemies.splice(0, 1);
+                bullets.splice(i, 1);
         }
     }
 }
