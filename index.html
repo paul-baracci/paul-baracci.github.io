@@ -1,20 +1,23 @@
+<meta charset="UTF-8">
 <canvas id="gc"></canvas>
 <script>
 
-const gravity=0.5;
+const gravity = 9.0;
 const spriteWidth = 70;
 const spriteHeight = 70;
-const totalPlatforms = 40;
 
 let playerx = playery = 200;
 let xvelocity = yvelocity = 0;
 let onGround = holdLeft = holdRight = false;
 let platforms = [];
 let bullets = [];
-let playerDirection = "left";
+let goal = {};
+let enemies = [];
+let playerDirection = 'right'
 let framex = 0;
 let framey = 0;
 let spriteframe = 0;
+const totalPlatforms = 40;
 let playerImage = new Image();
 
 playerImage.src = 'player.png';
@@ -28,12 +31,18 @@ window.onload = function() {
     document.addEventListener('keyup', keyUp);
     document.addEventListener('keydown', keyDown);
 
-    goal= {
+    goal = {
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
       w: 40,
       h: 60
     }
+
+    enemies.push({
+        x: playerx + 200,
+        y: playery - spriteWidth / 2,
+        r: 20
+    });
 
     for (i = 0; i < totalPlatforms; i++) {
         platforms.push({
@@ -58,15 +67,16 @@ function update() {
         framex = 0;
         framey = 2;
     }
-
-    if (playerx+spriteWidth / 2 >= goal.x &&
-        playerx-spriteWidth / 2 <= goal.x && 
-        playery+spriteWidth >= goal.y - 5 &&
-        playery-spriteWidth <= goal.y) {
+    
+    //goal touch action
+    if (playerx + spriteWidth / 2 >= goal.x - 5 &&
+        playerx - spriteWidth / 2 <= goal.x + 5 && 
+        playery + spriteHeight / 2 >= goal.y + 10 &&
+        playery - spriteHeight / 2 <= goal.y - 10) {
             alert('You Win! Generate next level?');
-            location = location
+            location = location;
         }
-            
+
     if (playery > window.innerHeight) {
         xvelocity = yvelocity = 0;
         playerx = playery = 200;
@@ -79,15 +89,15 @@ function update() {
     if (playerx > window.innerWidth - 8) {
         playerx = 0;
     }
-
+    
     onGround=false;
 
     for (i = 0; i < totalPlatforms; i++) {
         if (
-            playerx>platforms[i].x - 20 && 
-            playerx<platforms[i].x + platforms[i].w + 20 &&
-            playery>platforms[i].y &&
-            playery<platforms[i].y + platforms[i].h 
+            playerx > platforms[i].x - 20 && 
+            playerx < platforms[i].x + platforms[i].w + 20 &&
+            playery > platforms[i].y &&
+            playery < platforms[i].y + platforms[i].h 
         ) {
             playery=platforms[i].y;
             onGround = true;
@@ -128,22 +138,36 @@ function update() {
         framey * spriteHeight,
         spriteWidth, 
         spriteHeight,
-        playerx+spriteWidth / 2,
+        playerx + spriteWidth / 2,
         playery,
         -spriteWidth,
         -spriteHeight
     )
 
+    //todo on-screen controlls
+
     // draw level goal
-    context.lineWidth = 3;
-    context.strokeStyle = 'orange';
-    context.strokeRect(
-        goal.x - 10,
-        goal.y,
+    context.fillStyle = 'orange';
+    context.fillRect(
+        goal.x - 20,
+        goal.y - 40,
         goal.w,
         goal.h
     );
-
+    
+    // draw enemy that follows playery
+    if (enemies.length) {
+    context.beginPath();
+    context.arc(
+        playerx + 200,
+        playery - spriteWidth / 2,
+        20,
+        0,
+        2 * Math.PI
+    );
+    context.fillStyle = 'red';
+    context.fill();
+    }
     // draw platforms
     for (i = 0; i < totalPlatforms; i++) {
         context.lineWidth = 2;
@@ -157,17 +181,17 @@ function update() {
     }
 
     // draw lava floor
-    context.fillStyle="red";
+    context.fillStyle = "red";
     context.fillRect(
         0,
-        canvas.height-10,
+        canvas.height - 10,
         canvas.width,
-        canvas.height+1
+        canvas.height + 4
     );
 
     //draw bullets if any are pushed to their array
     for (var i = 0; i < bullets.length; i++) {
-        context.fillStyle = '#f00';
+        context.fillStyle = 'black';
         context.fillRect(
             bullets[i][0],
             bullets[i][1],
@@ -190,6 +214,11 @@ function update() {
         if (bullets[i][0] < -10 || bullets[i][0] > window.innerWidth-8) {	
             bullets.splice(i, 1);
         }
+        //kill enemy action
+        if (bullets && bullets[i][0] >= enemies[0].x) {
+            enemies = [];
+        }
+        
     }
 }
 
